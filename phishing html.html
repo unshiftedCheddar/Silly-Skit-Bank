@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Peter!</title>
+<link rel="icon" href="https://scontent.fwnp1-1.fna.fbcdn.net/v/t1.15752-9/597945898_3788099801491116_4346207469951039127_n.png?_nc_cat=106&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFDqnaxCc7E_uGU28AsNRXzsastbUIgh76xqy1tQiCHvkpdYrp-r8oplbfXOamyl0NkRJVXlHkMWhyZAElrDFsb&_nc_ohc=cxmmM6ot6dUQ7kNvwGQo_-U&_nc_oc=Adowz0C1bWSDp_ChBJZfsalQkiXrtBXKkMuvWPi_S-GJchb6_B3Gv5GPHWhX-hPDrtk&_nc_zt=23&_nc_ht=scontent.fwnp1-1.fna&_nc_ss=7a2a8&oh=03_Q7cD5QE_FdS5rn-v5eFMvus5rn-uIr4JndxDHDpm429DK3rDYg&oe=6A3400B5">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fffde7;
+    font-family: 'Quicksand', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hint {
+    position: absolute;
+    bottom: 32px;
+    font-size: 14px;
+    color: #c8960a;
+    letter-spacing: 0.05em;
+    opacity: 1;
+    transition: opacity 0.5s;
+  }
+  .hint.hidden { opacity: 0; pointer-events: none; }
+
+  .bg-confetti {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    object-fit: contain;
+  }
+  .bg-confetti.active {
+    animation: bg-fall linear forwards;
+  }
+  @keyframes bg-fall {
+    0%   { opacity: 0.9; transform: translateY(-80px) rotate(0deg) scale(var(--s)); }
+    10%  { opacity: 0.85; }
+    85%  { opacity: 0.65; }
+    100% { opacity: 0; transform: translateY(108vh) rotate(var(--spin)) scale(calc(var(--s) * 0.65)); }
+  }
+
+  .foot-wrapper {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    animation: shake 1.4s ease-in-out infinite;
+    transform-origin: center bottom;
+    transition: transform 0.3s;
+    z-index: 2;
+  }
+  .foot-wrapper:active { transform: scale(0.96); }
+
+  @keyframes shake {
+    0%,100% { rotate: 0deg; }
+    15%      { rotate: -6deg; }
+    30%      { rotate: 6deg; }
+    45%      { rotate: -4deg; }
+    60%      { rotate: 4deg; }
+    75%      { rotate: -2deg; }
+    90%      { rotate: 2deg; }
+  }
+
+  .foot-wrapper.opened { animation: none; cursor: default; }
+
+  .foot-svg {
+    display: block;
+    filter: drop-shadow(0 14px 36px rgba(200,150,10,0.28));
+    transition: filter 0.4s;
+  }
+  .foot-wrapper.opened .foot-svg {
+    filter: drop-shadow(0 20px 52px rgba(200,150,10,0.45));
+  }
+
+  .message-layer {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.6s 0.2s, transform 0.6s 0.2s;
+    pointer-events: none;
+    padding: 130px 52px 148px;
+    text-align: center;
+  }
+  .message-layer.visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  .quote {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #7a5c00;
+    line-height: 1.6;
+    word-break: break-word;
+  }
+
+  .birthday-text {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    color: #c8870a;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 8px rgba(200,150,10,0.3);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50%      { transform: scale(1.06); }
+  }
+
+  .confetti-piece {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-60px) rotate(0deg) scale(1); opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg) scale(0.6); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="foot-wrapper" id="card">
+  <svg class="foot-svg" width="480" height="600" viewBox="0 0 300 375" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="footGrad" x1="10%" y1="0%" x2="90%" y2="100%">
+        <stop offset="0%"   style="stop-color:#ffffff"/>
+        <stop offset="45%"  style="stop-color:#ffe566"/>
+        <stop offset="100%" style="stop-color:#ffc107"/>
+      </linearGradient>
+      <linearGradient id="shineGrad" x1="0%" y1="0%" x2="60%" y2="100%">
+        <stop offset="0%"   style="stop-color:#ffffff;stop-opacity:0.55"/>
+        <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0"/>
+      </linearGradient>
+    </defs>
+
+    <!-- MAIN SOLE: wider, rounder body for more interior text space -->
+    <path d="
+      M 80 340
+      C 42 338, 22 312, 22 278
+      C 22 248, 30 218, 34 190
+      C 38 162, 36 140, 40 120
+      C 45  96, 58  78, 76  70
+      C 92  62,110  62,124  68
+      C 134  74,140  84,144  96
+      C 148  84,156  72,170  66
+      C 184  60,200  64,210  76
+      C 218  86,218 100,210 110
+      C 222 102,236 104,244 114
+      C 252 124,250 140,240 150
+      C 250 144,260 148,264 160
+      C 268 172,262 188,250 194
+      C 256 206,260 228,256 256
+      C 252 284,236 314,206 330
+      C 184 342,158 348,132 346
+      C 110 344, 94 342, 80 340 Z
+    " fill="url(#footGrad)" stroke="#e6a800" stroke-width="2.5" stroke-linejoin="round"/>
+
+    <!-- SHINE OVERLAY on upper-left -->
+    <path d="
+      M 76 70 C 92 62,110 62,124 68
+      C 134 74,140 84,144 96
+      C 130 90,110 82, 90 86
+      C 68 90, 52 104, 42 126
+      C 38 108, 50 84, 76 70 Z
+    " fill="url(#shineGrad)"/>
+
+    <!-- GLINTS on each toe tip -->
+    <ellipse cx="132" cy="72"  rx="6"   ry="4"   fill="rgba(255,255,255,0.5)"/>
+    <ellipse cx="188" cy="66"  rx="5.5" ry="3.5" fill="rgba(255,255,255,0.45)"/>
+    <ellipse cx="232" cy="112" rx="5"   ry="3.5" fill="rgba(255,255,255,0.4)"/>
+    <ellipse cx="252" cy="152" rx="4.5" ry="3"   fill="rgba(255,255,255,0.38)"/>
+    <ellipse cx="256" cy="192" rx="4"   ry="3"   fill="rgba(255,255,255,0.35)"/>
+
+    <!-- SOFT INNER HIGHLIGHT -->
+    <ellipse cx="148" cy="230" rx="72" ry="85" fill="rgba(255,255,255,0.13)"/>
+
+    <!-- ARCH LINE -->
+    <path d="M 46 210 C 60 252, 82 282,108 300"
+          stroke="rgba(255,255,255,0.28)" stroke-width="14"
+          fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <div class="message-layer" id="msg">
+    <div> <img src="https://scontent.fwnp1-1.fna.fbcdn.net/v/t1.15752-9/597945898_3788099801491116_4346207469951039127_n.png?_nc_cat=106&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFDqnaxCc7E_uGU28AsNRXzsastbUIgh76xqy1tQiCHvkpdYrp-r8oplbfXOamyl0NkRJVXlHkMWhyZAElrDFsb&_nc_ohc=cxmmM6ot6dUQ7kNvwGQo_-U&_nc_oc=Adowz0C1bWSDp_ChBJZfsalQkiXrtBXKkMuvWPi_S-GJchb6_B3Gv5GPHWhX-hPDrtk&_nc_zt=23&_nc_ht=scontent.fwnp1-1.fna&_nc_ss=7a2a8&oh=03_Q7cD5QE_FdS5rn-v5eFMvus5rn-uIr4JndxDHDpm429DK3rDYg&oe=6A3400B5" alt="peter" style="width: 144px"> </div>
+    <div class="quote">"Every step you take is a blessing,<br>especially the barefoot ones! 🦶"</div>
+    <div class="birthday-text">Happy Birthday Peter! 🎉</div>
+  </div>
+</div>
+
+<div class="hint" id="hint">👆 Click the foot!</div>
+
+<script>
+  /* ╔══════════════════════════════════════════════════════════════╗
+     ║  BACKGROUND PNG CONFETTI CONFIG — edit these values freely!  ║
+     ╚══════════════════════════════════════════════════════════════╝ */
+
+  const BG_IMAGE    = 'https://imgs.search.brave.com/m-lsNvsCThLkGyj9Ot-luN7x4Wt87Fv46q0fn6ZGZZs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4z/ZC5pY29uc2NvdXQu/Y29tLzNkL3ByZW1p/dW0vdGh1bWIvZm9v/dC0zZC1pY29uLWRv/d25sb2FkLWluLXBu/Zy1ibGVuZC1mYngt/Z2x0Zi1maWxlLWZv/cm1hdHMtLWxlZy1m/ZWV0LWZhc2hpb24t/aHVtYW4tb3JnYW5z/LXBhY2staGVhbHRo/Y2FyZS1tZWRpY2Fs/LWljb25zLTk0MDU2/MjUucG5nP2Y9d2Vi/cA'; // 🔁 Swap with your PNG path or URL
+
+  const BG_COUNT    = 40;   // ← raise for MORE pieces (try 80, 120, 200...)
+
+  const BG_SIZE_MIN = 24;   // smallest piece (px)
+  const BG_SIZE_MAX = 80;   // largest piece  (px)
+
+  const BG_SPEED_MIN = 4;   // slowest floater (seconds)
+  const BG_SPEED_MAX = 9;   // fastest faller  (seconds)
+
+  const BG_SPIN_MIN = 180;  // minimum spin (degrees)
+  const BG_SPIN_MAX = 720;  // maximum spin (degrees)
+
+  /* ════════════════════════════════════════════════════════════════ */
+
+  const card = document.getElementById('card');
+  const msg  = document.getElementById('msg');
+  const hint = document.getElementById('hint');
+  let opened = false;
+
+  function spawnBgConfetti() {
+    for (let i = 0; i < BG_COUNT; i++) {
+      setTimeout(() => {
+        const el = document.createElement('img');
+        el.src = BG_IMAGE;
+        el.classList.add('bg-confetti');
+
+        const size      = BG_SIZE_MIN + Math.random() * (BG_SIZE_MAX - BG_SIZE_MIN);
+        const duration  = BG_SPEED_MIN + Math.random() * (BG_SPEED_MAX - BG_SPEED_MIN);
+        const spinMag   = BG_SPIN_MIN + Math.random() * (BG_SPIN_MAX - BG_SPIN_MIN);
+        const spinDir   = Math.random() > 0.5 ? 1 : -1;
+        const baseScale = 0.8 + Math.random() * 0.4;
+
+        el.style.cssText = `
+          width:${size}px;
+          height:${size}px;
+          left:${Math.random() * 100}vw;
+          top:-80px;
+          animation-duration:${duration}s;
+          animation-delay:${Math.random() * 1.5}s;
+        `;
+        el.style.setProperty('--s', baseScale);
+        el.style.setProperty('--spin', (spinDir * spinMag) + 'deg');
+
+        document.body.appendChild(el);
+        void el.offsetWidth;
+        el.classList.add('active');
+        setTimeout(() => el.remove(), (duration + 2.5) * 1000);
+      }, i * 55);
+    }
+  }
+
+  const EMOJIS = ['🦶','🦶','👣','🦶','👣','🦶'];
+  function spawnFgConfetti() {
+    for (let i = 0; i < 50; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.classList.add('confetti-piece');
+        el.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+        const dur = 2.4 + Math.random() * 2.2;
+        el.style.cssText = `
+          left:${Math.random() * 100}vw;
+          top:-60px;
+          font-size:${16 + Math.random() * 18}px;
+          animation-duration:${dur}s;
+          animation-delay:${Math.random() * 0.6}s;
+        `;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), (dur + 1) * 1000);
+      }, i * 35);
+    }
+  }
+
+  card.addEventListener('click', () => {
+    if (opened) return;
+    opened = true;
+    card.classList.add('opened');
+    msg.classList.add('visible');
+    hint.classList.add('hidden');
+    spawnBgConfetti();
+    spawnFgConfetti();
+    setTimeout(() => { spawnBgConfetti(); spawnFgConfetti(); }, 3200);
+    setTimeout(() => { spawnBgConfetti(); spawnFgConfetti(); }, 6400);
+  });
+</script>
+</body>
+</html>
